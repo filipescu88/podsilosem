@@ -182,15 +182,25 @@ jQuery( document ).ready( function( $ ) {
 
   // Smooth Scroll Anchors
   function smoothScrollAnchors() {
-    $( 'body:not(.single-product) a[href*="#"]:not([href="#"])' ).on( 'click', function() {
+    $( 'body:not(.single-product) a[href*="#"]:not([href="#"])' ).on( 'click', function(e) {
       var target;
+      var hash = this.hash;
+      
       if ( location.pathname.replace( /^\//, '' ) === this.pathname.replace( /^\//, '' ) && location.hostname === this.hostname ) {
-        target = $( this.hash );
-        target = target.length ? target : $( '[name=' + this.hash.slice( 1 ) + ']' );
+        target = $( hash );
+        target = target.length ? target : $( '[name=' + hash.slice( 1 ) + ']' );
+        
         if ( target.length ) {
-          $( 'html,body' ).animate( {
-            scrollTop: target.offset().top - $( '#sticky-wrapper' ).outerHeight( true )
+          e.preventDefault();
+          
+          var offsetTop = target.offset().top;
+          var stickyHeight = $( '#sticky-wrapper' ).length ? $( '#sticky-wrapper' ).outerHeight( true ) : 0;
+          var headerHeight = $( '.top-header' ).length ? $( '.top-header' ).outerHeight( true ) : 80;
+          
+          $( 'html, body' ).animate( {
+            scrollTop: offsetTop - headerHeight - 20
           }, 1000 );
+          
           return false;
         }
       }
